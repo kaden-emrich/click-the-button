@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click The Button</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .button-div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="button-div">
+
+        <button id="the-button" onmouseover="buttonHover()">click</button>
+
+    </div>
+
+</body>
+
+<script src="utils.js"></script>
+
+<script>
+
+var theButton = document.getElementById("the-button");
+var isFirst = true;
+
+function buttonHover() {
+
+    if(isFirst) {
+
+        isFirst = false;
+
+        theButton.parentElement.style.display = "block";
+        theButton.style.position = "absolute";
+        
+    }
+
+    theButton.style.top = rng(0, window.innerHeight - theButton.offsetHeight) + "px";
+    theButton.style.left = rng(0, window.innerWidth - theButton.offsetWidth) + "px";
+
+}// buttonHover()
+
+</script>
+
+</html>

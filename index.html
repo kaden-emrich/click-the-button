@@ -33,7 +33,7 @@
 
     <div class="button-div">
 
-        <button id="the-button" onmouseover="buttonHover()" onclick="alert('You did it! Horray!')">click</button>
+        <button id="the-button" onclick="buttonClick()" onmouseover="buttonHover()" on>click</button>
 
     </div>
 
@@ -46,6 +46,13 @@
 var theButton = document.getElementById("the-button");
 var isFirst = true;
 
+function buttonClick() {
+
+    alert("You did it. Good for you I guess."); 
+    buttonHover();
+
+}// buttonClick()
+
 function buttonHover() {
 
     if(isFirst) {
@@ -57,10 +64,30 @@ function buttonHover() {
         
     }
 
-    theButton.style.top = rng(0, window.innerHeight - theButton.offsetHeight) + "px";
-    theButton.style.left = rng(0, window.innerWidth - theButton.offsetWidth) + "px";
+    theButton.style.top = rngInt(0, window.innerHeight - theButton.offsetHeight) + "px";
+    theButton.style.left = rngInt(0, window.innerWidth - theButton.offsetWidth) + "px";
 
 }// buttonHover()
+
+function update() {
+
+    console.log('update'); // for debugging
+
+    if(theButton.offsetTop + theButton.offsetHeight > window.innerHeight) {
+
+        theButton.style.top = (window.innerHeight - theButton.offsetHeight) + "px";
+
+    }
+
+    if(theButton.offsetLeft + theButton.offsetWidth > window.innerWidth) {
+
+        theButton.style.left = (window.innerWidth - theButton.offsetWidth) + "px";
+        
+    }
+
+}// update()
+
+window.addEventListener("resize", update);
 
 </script>
 

@@ -1,103 +1,66 @@
 body {
+    min-height: 100vh;
+    min-width: 100vw;
     margin: 0;
     padding: 0;
-    font-family: monospace;
 }
 
-/* modifier classes start */
-
-.hide {
-    display: none;
+h1 {
+    margin: 0;
+    padding: 0;
+}
+h2 {
+    margin: 0;
+    padding: 0;
+}
+h3 {
+    margin: 0;
+    padding: 0;
 }
 
-.transparent {
-    opacity: 0;
+div#game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-.bold {
-    font-weight: 900;
+div#win-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    user-select: none;
 }
 
-/* animation modifiers */
-
-.fade-in {
-    animation: fade-in 1s linear normal both;
+#win-screen h2 {
+    position: relative;
+    top: -7px;
 }
 
-.fade-out {
-    animation: fade-in 1s linear reverse both;
-}
-
-.shrink-out {
-    animation: shrink-out 1s linear normal forwards;
-}
-
-.pos-absolute {
+.absolute {
     position: absolute;
 }
 
-/* modifier classes end */
-
-.game {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+#next-button {
+    margin: 20px;
 }
 
-div.button-div {
-    display: block;
-    align-items: center;
-    text-align: center;
+.hidden {
+    display: none !important;
 }
 
-#button-heading {
-    margin: auto;
-    font-size: 3vw;
-    text-align: center;
-}
-
-#the-button {
-    position: relative;
-    padding: 0.5vw;
-    font-size: 5vw;
-    background-color: #d3d3d3;
-    border: 0.5vw solid #808080;
-    border-radius: 1vw;
-    align-self: center;
-    font-family: monospace;
-}
-#the-button:hover {
-    background-color: #c0c0c0;
-    border-color: #707070;
-}
-#the-button:active {
-    background-color: #808080;
-    border-color: #404040;
-}
-
-p.counter {
-    margin: 0;
-    text-align: center;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes shrink-out {
-    to {
-        height: 0%;
-        margin: 0%;
-        padding: 0%;
-        font-size: 0%;
-        opacity: 0%;
-    }
+.invisable {
+    opacity: 0;
 }

@@ -1,121 +1,250 @@
-var theButton = document.getElementById("the-button");
-var clickCounter = document.getElementById("click-counter");
-var buttonHeading = document.getElementById("button-heading");
+const theButton = document.getElementById('the-button');
+const gameArea = document.getElementById('game');
+const buttonLable = document.getElementById('button-lable');
 
-var numClicks = 0;
+var winScreen = Object();
+winScreen.div = document.getElementById('win-screen');
+winScreen.main = document.querySelector('#win-screen h1');
+winScreen.heading = document.querySelector('#win-screen h2');
+winScreen.nextButton = document.getElementById('next-button');
+winScreen.levelDisplay = document.getElementById('level-display');
 
-function buttonClick() {
+// winScreen.nextFunc = undefined;
 
-    console.log("click"); // for debugging
-    
-    numClicks += 1;
-    clickCounter.innerText = numClicks;
+const levels = [
+    setUpLvl1,
+    setUpLvl2,
+    setUpLvl3,
+    setUpLvl4,
+    setUpLvl5
+]
 
-    if(numClicks == 1) {
+var level = 1;
 
+function hideGameArea() {
+    gameArea.classList.add('hidden');
+}
+function showGameArea() {
+    gameArea.classList.remove('hidden');
+}
+
+winScreen.show = function() {
+    winScreen.div.classList.remove('hidden');
+}
+winScreen.hide = function() {
+    winScreen.div.classList.add('hidden');
+}
+winScreen.set = function(header = "", win = true) {
+    if(win) {
+        winScreen.main.innerText = "You Win!";
+        winScreen.nextButton.innerText = "Next Level";
+        winScreen.nextButton.onclick = nextLevel;
+    }
+    else {
+        winScreen.main.innerText = "You Lose!";
+        winScreen.nextButton.innerText = "Restart";
+        winScreen.nextButton.onclick = init;
+    }
+
+    winScreen.heading.innerHTML = header;
+    winScreen.levelDisplay.innerHTML = level;
+}
+
+winScreen.end = function() {
+    winScreen.main.innerText = "The End";
+    winScreen.nextButton.innerText = "Restart";
+    winScreen.nextButton.onclick = init;
+
+    winScreen.heading.innerHTML = "that's it";
+    winScreen.levelDisplay.innerHTML = levels.length;
+}
+
+function nextLevel() {
+    level++;
+    // winScreen.hide();
+    if(level - 1 >= levels.length) {
+        winScreen.end();
+    }
+    else {
+        levels[level - 1]();
+    }
+}
+
+//start setups
+
+function cleanGameArea() {
+    theButton.innerText = "click";
+
+    theButton.onclick = undefined;
+    theButton.onmouseenter = undefined;
+    theButton.onmouseleave = undefined;
+
+    theButton.classList.remove('invisable');
+    theButton.classList.remove('absolute');
+
+    theButton.style = "";
+
+    buttonLable.innerHTML = '';
+}
+
+function lvl1Finish() {
+    // console.log("complete lvl1"); // for debugging
+    hideGameArea();
+    winScreen.set();
+    winScreen.show();
+}
+function setUpLvl1() {
+    winScreen.hide();
+    cleanGameArea();
+    buttonLable.innerText = "click the button";
+    theButton.onclick = () => {
+        lvl1Finish();
+    }
+    showGameArea();
+}
+
+var lvl2IsFinished = false;
+function lvl2Finish() {
+    lvl2IsFinished = true;
+    hideGameArea();
+    winScreen.set("again");
+    winScreen.show();
+}
+function setUpLvl2() {
+    winScreen.hide();
+    cleanGameArea();
+    lvl2IsFinished = false;
+    theButton.onclick = () => {
         theButton.innerText = "again";
 
-        buttonHeading.classList.add("shrink-out");
+        theButton.onclick = () => {
+            lvl2Finish();
+        }
+        
         setTimeout(() => {
-            buttonHeading.classList.add("hide");
-            buttonHeading.classList.remove("shrink-out");
-        }, 1000);
+            if(!lvl2IsFinished) {
+                hideGameArea();
+                winScreen.set("You weren't paying attention.", false);
+                winScreen.show();
+            }
+        }, 500);
+    }
+    showGameArea();
+}
 
+function lvl3Finish() {
+    hideGameArea();
+    winScreen.set("you found him :)");
+    winScreen.show();
+}
+function setUpLvl3() {
+    winScreen.hide();
+    cleanGameArea();
+    theButton.classList.add('invisable');
+
+    theButton.innerText = "You found me!";
+
+    theButton.onmouseenter = () => {
+        theButton.classList.remove('invisable');
+    }
+    theButton.onmouseleave = () => {
+        theButton.classList.add('invisable');
+    }
+    theButton.onclick = () => {
+        lvl3Finish();
     }
 
-    if(numClicks == 2) {
+    showGameArea();
+}
 
-        //theButton.innerText = "Again";
-        theButton.classList.add("bold");
+var lvl4Interval = undefined;
+var lvl4Time = 500;
+function lvl4Finish() {
+    clearInterval(lvl4Interval);
+    hideGameArea();
+    winScreen.set(`You watched it bounce for ${Math.floor(lvl4Time/1000)} seconds`);
+    winScreen.show();
+}
+function setUpLvl4() {
+    winScreen.hide();
+    cleanGameArea();
+    theButton.classList.add('absolute');
 
-    }
+    lvl4Time = 500;
 
-    if(numClicks == 3) {
+    let speed = 5;
+
+    let xVelocity = speed;
+    let yVelocity = 0-speed;
+
+    let xPosition = window.innerWidth/2 - theButton.clientWidth;
+    let yPosition = window.innerHeight/2 - theButton.clientHeight;
+
+    theButton.style.top = yPosition + "px";
+    theButton.style.left = xPosition + "px";
+
+    lvl4Interval = setInterval(() => {
+
+        if(xPosition <= 0) {
+            xVelocity = speed;
+        }
+        if(xPosition >= window.innerWidth - theButton.clientWidth) {
+            xVelocity = 0-speed;
+        }
+        if(yPosition <= 0) {
+            yVelocity = speed;
+        }
+        if(yPosition >= window.innerHeight - theButton.clientHeight) {
+            yVelocity = 0-speed;
+        }
         
-        theButton.innerText = "AGAIN";
+        xPosition += xVelocity;
+        yPosition += yVelocity;
 
+        theButton.style.top = yPosition + "px";
+        theButton.style.left = xPosition + "px";
+
+        lvl4Time += 1000/60;
+    }, 1000/60);
+
+    theButton.onclick = lvl4Finish;
+
+    showGameArea();
+}
+
+function lvl5Finish() {
+    hideGameArea();
+    winScreen.set("good dog");
+    winScreen.show();
+} 
+function setUpLvl5() {
+    var lvl5Clicked = false;
+    winScreen.hide();
+    cleanGameArea();
+    buttonLable.innerText = "don't";
+
+    theButton.onclick = () => {
+        lvl5Clicked = true;
+        hideGameArea();
+        winScreen.set("You know what the word \"don't\" means right?", false);
+        winScreen.show();
     }
 
-    if(numClicks == 4) {
-        
-        theButton.innerText = "AGAIN!";
+    setTimeout(() => {
+        if(!lvl5Clicked) {
+            lvl5Finish();
+        }
+    }, 5000)
 
-    }
+    showGameArea();
+}
 
-    if(numClicks == 5) {
 
-        theButton.classList.remove("bold");
-        theButton.innerText = "okay.";
 
-    }
-
-    if(numClicks == 6) {
-
-        theButton.innerText = "thanks";
-
-    }
-
-    if(numClicks == 7) {
-
-        theButton.innerText = "that's enough";
-
-    }
-
-    if(numClicks == 8) {
-
-        theButton.innerText = "you can stop now";
-
-    }
-
-    if(numClicks == 9) {
-
-        theButton.innerText = "no need to continue";
-
-    }
-
-    if(numClicks == 10) {
-
-        theButton.innerText = "stop";
-
-    }
-
-    if(numClicks > 10 && numClicks <= 15) {
-
-        theButton.parentElement.parentElement.style.display = "block";
-        theButton.parentElement.classList.add("pos-absolute");
-        
-        theButton.style.top = rng(0, window.innerHeight - theButton.offsetHeight) + "px";
-        theButton.style.left = rng(0, window.innerWidth - theButton.offsetWidth) + "px";
-
-        theButton.innerText = "DONT click";
-
-    }
-
-    if(numClicks == 16) {
-
-        theButton.parentElement.parentElement.style = "";
-        theButton.style = "";
-        theButton.parentElement.classList.remove("pos-absolute");
-
-        theButton.innerText = "ok I give up.";
-
-    }
-
-    // if(numClicks == 5) {
-
-    //     clickCounter.parentElement.classList.add("fade-in");
-    //     clickCounter.parentElement.classList.remove("transparent");
-
-    // }
-
-}// click()
 
 function init() {
+    level = 1;
+    setUpLvl1();
+}
 
-    theButton = document.getElementById("the-button");
-    clickCounter = document.getElementById("click-counter");
-    buttonHeading = document.getElementById("button-heading");
-
-    numClicks = 0;
-
-}// init()
+init();

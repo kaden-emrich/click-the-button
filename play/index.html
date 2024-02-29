@@ -11,19 +11,21 @@
 
 </head>
 
-<body onload="init()">
+<body>
 
-    <div class="game">
-
-        <div class="button-div">
-
-            <h2 id="button-heading">Click The Button</h2>
-            <button id="the-button" onclick="buttonClick()">click</button>
-            <p class="counter hide">Clicks: <span id="click-counter"></span></p>
-
+    <main>
+        <div id="game">
+            <h3 id="button-lable"></h3>
+            <button id="the-button">click</button>
         </div>
-        
-    </div>
+
+        <div id="win-screen" class="hidden">
+            <h1>YOU WIN!</h1>
+            <h2></h2>
+            <h3>Level <span id="level-display">1</span></h3>
+            <button id="next-button">Next Level</button>
+        </div>
+    </main>
 
 </body>
 

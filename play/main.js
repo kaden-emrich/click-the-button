@@ -107,7 +107,7 @@ var lvl2IsFinished = false;
 function lvl2Finish() {
     lvl2IsFinished = true;
     hideGameArea();
-    winScreen.set("again");
+    winScreen.set("You were paying attention\n(or mistakenly clicked it twice)");
     winScreen.show();
 }
 function setUpLvl2() {
@@ -214,7 +214,7 @@ function setUpLvl4() {
 
 function lvl5Finish() {
     hideGameArea();
-    winScreen.set("good dog");
+    winScreen.set("You didn't");
     winScreen.show();
 } 
 function setUpLvl5() {
@@ -226,7 +226,7 @@ function setUpLvl5() {
     theButton.onclick = () => {
         lvl5Clicked = true;
         hideGameArea();
-        winScreen.set("You know what the word \"don't\" means right?", false);
+        winScreen.set("You didn't don't\nNext time do don't\nBut don't do", false);
         winScreen.show();
     }
 

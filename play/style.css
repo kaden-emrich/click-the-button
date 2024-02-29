@@ -47,6 +47,8 @@ div#win-screen {
 #win-screen h2 {
     position: relative;
     top: -7px;
+    white-space: pre;
+    text-align: center;
 }
 
 .absolute {

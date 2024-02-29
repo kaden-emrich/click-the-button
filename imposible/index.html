@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click The Button</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .button-div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #the-button {
+            font-size: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="button-div">
+
+        <button id="the-button" onclick="buttonClick()" onmouseover="buttonHover()" on>click</button>
+
+    </div>
+
+</body>
+
+<script src="../utils.js"></script>
+
+<script>
+
+var theButton = document.getElementById("the-button");
+var isFirst = true;
+
+function buttonClick() {
+
+    alert("You did it. Good for you I guess."); 
+    buttonHover();
+
+}// buttonClick()
+
+function buttonHover() {
+
+    if(isFirst) {
+
+        isFirst = false;
+
+        theButton.parentElement.style.display = "block";
+        theButton.style.position = "absolute";
+        
+    }
+
+    theButton.style.top = rngInt(0, window.innerHeight - theButton.offsetHeight) + "px";
+    theButton.style.left = rngInt(0, window.innerWidth - theButton.offsetWidth) + "px";
+
+}// buttonHover()
+
+function update() {
+
+    console.log('update'); // for debugging
+
+    if(theButton.offsetTop + theButton.offsetHeight > window.innerHeight) {
+
+        theButton.style.top = (window.innerHeight - theButton.offsetHeight) + "px";
+
+    }
+
+    if(theButton.offsetLeft + theButton.offsetWidth > window.innerWidth) {
+
+        theButton.style.left = (window.innerWidth - theButton.offsetWidth) + "px";
+        
+    }
+
+}// update()
+
+window.addEventListener("resize", update);
+
+</script>
+
+</html>

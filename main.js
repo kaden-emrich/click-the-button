@@ -1,4 +1,6 @@
-const theButton = document.getElementById('the-button');
+// Kaden Emrich
+
+const theButton = document.getElementById('the-button'); // his name is Benedict
 const gameArea = document.getElementById('game');
 const buttonLable = document.getElementById('button-lable');
 
@@ -142,6 +144,7 @@ function setUpLvl3() {
     cleanGameArea();
     theButton.classList.add('invisable');
 
+    buttonLable.innerText = "Where did he go?";
     theButton.innerText = "You found me!";
 
     theButton.onmouseenter = () => {

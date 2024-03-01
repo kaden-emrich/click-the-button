@@ -1,4 +1,14 @@
-// Kaden Emrich
+// By: Kaden Emrich
+
+/*
+
+Playtesters:
+Andrew Popovic
+Viekses Horn
+Ethan Jezior
+Greg Janvier
+
+*/
 
 const theButton = document.getElementById('the-button'); // his name is Benedict
 const gameArea = document.getElementById('game');

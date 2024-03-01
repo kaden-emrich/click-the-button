@@ -11,6 +11,9 @@ winScreen.heading = document.querySelector('#win-screen h2');
 winScreen.nextButton = document.getElementById('next-button');
 winScreen.levelDisplay = document.getElementById('level-display');
 
+const forceField = document.getElementById('force-field');
+const forceFieldControls = document.getElementById('force-field-control');
+
 // winScreen.nextFunc = undefined;
 
 const levels = [
@@ -18,7 +21,8 @@ const levels = [
     setUpLvl2,
     setUpLvl3,
     setUpLvl4,
-    setUpLvl5
+    setUpLvl5,
+    setUpLvl6
 ]
 
 var level = 1;
@@ -87,6 +91,9 @@ function cleanGameArea() {
     theButton.style = "";
 
     buttonLable.innerHTML = '';
+
+    forceField.classList.add('hidden');
+    forceFieldControls.classList.add('hidden');
 }
 
 function lvl1Finish() {
@@ -238,6 +245,36 @@ function setUpLvl5() {
             lvl5Finish();
         }
     }, 5000)
+
+    showGameArea();
+}
+
+function lvl6Finish() {
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("You aren't qualified to operate those controls.\n Management will be hearing about this");
+    winScreen.show();
+}
+function setUpLvl6() {
+    winScreen.hide();
+    cleanGameArea();
+
+    forceField.classList.remove('hidden');
+    forceFieldControls.classList.remove('hidden');
+
+    forceFieldControls.querySelector('input').checked = true;
+    forceField.classList.remove('hidden');
+
+    theButton.onclick = lvl6Finish;
+
+    forceFieldControls.querySelector('.switch').onclick = () => {
+        if(forceFieldControls.querySelector('input').checked) {
+            forceField.classList.remove('hidden');
+        }
+        else {
+            forceField.classList.add('hidden');
+        }
+    }
 
     showGameArea();
 }

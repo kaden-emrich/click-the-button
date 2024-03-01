@@ -14,18 +14,21 @@ winScreen.levelDisplay = document.getElementById('level-display');
 const forceField = document.getElementById('force-field');
 const forceFieldControls = document.getElementById('force-field-control');
 
+const decoyButtons = document.querySelectorAll('.decoy-button');
+
 // winScreen.nextFunc = undefined;
 
 const levels = [
     setUpLvl1,
     setUpLvl2,
-    setUpLvl3,
-    setUpLvl4,
-    setUpLvl5,
-    setUpLvl6
+    bouncyLevelSetup,
+    dontLevelSetup,
+    sneekyLevelSetup,
+    forceFieldLevelSetup,
+    decoyLevelSetup
 ]
 
-var level = 1;
+var level = 0;
 
 function hideGameArea() {
     gameArea.classList.add('hidden');
@@ -65,6 +68,18 @@ winScreen.end = function() {
     winScreen.levelDisplay.innerHTML = levels.length;
 }
 
+function showDecoyButtons() {
+    for(let i = 0; i < decoyButtons.length; i++) {
+        decoyButtons[i].classList.remove('hidden');
+    }
+}
+
+function hideDecoyButtons() {
+    for(let i = 0; i < decoyButtons.length; i++) {
+        decoyButtons[i].classList.add('hidden');
+    }
+}
+
 function nextLevel() {
     level++;
     // winScreen.hide();
@@ -94,6 +109,8 @@ function cleanGameArea() {
 
     forceField.classList.add('hidden');
     forceFieldControls.classList.add('hidden');
+
+    hideDecoyButtons();
 }
 
 function lvl1Finish() {
@@ -141,46 +158,20 @@ function setUpLvl2() {
     showGameArea();
 }
 
-function lvl3Finish() {
+var bouncyLevelInterval = undefined;
+var bouncyLevelTime = 500;
+function bouncyLevelFinish() {
+    clearInterval(bouncyLevelInterval);
     hideGameArea();
-    winScreen.set("you found him :)");
+    winScreen.set(`You watched it bounce for ${Math.floor(bouncyLevelTime/1000)} seconds`);
     winScreen.show();
 }
-function setUpLvl3() {
-    winScreen.hide();
-    cleanGameArea();
-    theButton.classList.add('invisable');
-
-    buttonLable.innerText = "Where did he go?";
-    theButton.innerText = "You found me!";
-
-    theButton.onmouseenter = () => {
-        theButton.classList.remove('invisable');
-    }
-    theButton.onmouseleave = () => {
-        theButton.classList.add('invisable');
-    }
-    theButton.onclick = () => {
-        lvl3Finish();
-    }
-
-    showGameArea();
-}
-
-var lvl4Interval = undefined;
-var lvl4Time = 500;
-function lvl4Finish() {
-    clearInterval(lvl4Interval);
-    hideGameArea();
-    winScreen.set(`You watched it bounce for ${Math.floor(lvl4Time/1000)} seconds`);
-    winScreen.show();
-}
-function setUpLvl4() {
+function bouncyLevelSetup() {
     winScreen.hide();
     cleanGameArea();
     theButton.classList.add('absolute');
 
-    lvl4Time = 500;
+    bouncyLevelTime = 500;
 
     let speed = 5;
 
@@ -193,7 +184,7 @@ function setUpLvl4() {
     theButton.style.top = yPosition + "px";
     theButton.style.left = xPosition + "px";
 
-    lvl4Interval = setInterval(() => {
+    bouncyLevelInterval = setInterval(() => {
 
         if(xPosition <= 0) {
             xVelocity = speed;
@@ -214,20 +205,51 @@ function setUpLvl4() {
         theButton.style.top = yPosition + "px";
         theButton.style.left = xPosition + "px";
 
-        lvl4Time += 1000/60;
+        bouncyLevelTime += 1000/60;
     }, 1000/60);
 
-    theButton.onclick = lvl4Finish;
+    theButton.onclick = bouncyLevelFinish;
 
     showGameArea();
 }
 
-function lvl5Finish() {
+function sneekyLevelFinish() {
+    hideGameArea();
+    winScreen.set("you found him :)");
+    winScreen.show();
+}
+function sneekyLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+    theButton.classList.add('invisable');
+
+    theButton.classList.add('absolute');
+
+    showGameArea();
+
+    buttonLable.innerText = "Where did he go?";
+    theButton.innerText = "You found me!";
+
+    theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight) + "px";
+    theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth) + "px";
+
+    theButton.onmouseenter = () => {
+        theButton.classList.remove('invisable');
+    }
+    theButton.onmouseleave = () => {
+        theButton.classList.add('invisable');
+    }
+    theButton.onclick = () => {
+        sneekyLevelFinish();
+    }
+}
+
+function dontLevelFinish() {
     hideGameArea();
     winScreen.set("You didn't");
     winScreen.show();
 } 
-function setUpLvl5() {
+function dontLevelSetup() {
     var lvl5Clicked = false;
     winScreen.hide();
     cleanGameArea();
@@ -242,20 +264,20 @@ function setUpLvl5() {
 
     setTimeout(() => {
         if(!lvl5Clicked) {
-            lvl5Finish();
+            dontLevelFinish();
         }
     }, 5000)
 
     showGameArea();
 }
 
-function lvl6Finish() {
+function forceFieldLevelFinish() {
     hideGameArea();
     cleanGameArea();
     winScreen.set("You aren't qualified to operate those controls.\n Management will be hearing about this");
     winScreen.show();
 }
-function setUpLvl6() {
+function forceFieldLevelSetup() {
     winScreen.hide();
     cleanGameArea();
 
@@ -265,7 +287,7 @@ function setUpLvl6() {
     forceFieldControls.querySelector('input').checked = true;
     forceField.classList.remove('hidden');
 
-    theButton.onclick = lvl6Finish;
+    theButton.onclick = forceFieldLevelFinish;
 
     forceFieldControls.querySelector('.switch').onclick = () => {
         if(forceFieldControls.querySelector('input').checked) {
@@ -280,11 +302,34 @@ function setUpLvl6() {
 }
 
 
+function decoyLevelFinish() {
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("Good choice");
+    winScreen.show();
+}
+function decoyLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
 
+    for(let i = 0; i < decoyButtons.length; i++) {
+        decoyButtons[i].onclick = () => {
+            hideGameArea();
+            winScreen.set("No, thats not him.", false);
+            winScreen.show();
+        }
+    }
+
+    showDecoyButtons();
+
+    theButton.onclick = decoyLevelFinish;
+
+    showGameArea();
+}
 
 function init() {
-    level = 1;
-    setUpLvl1();
+    level = 0;
+    nextLevel();
 }
 
 init();

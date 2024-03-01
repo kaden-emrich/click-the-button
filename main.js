@@ -13,8 +13,17 @@ winScreen.levelDisplay = document.getElementById('level-display');
 
 const forceField = document.getElementById('force-field');
 const forceFieldControls = document.getElementById('force-field-control');
+const hCheckboxArea = document.getElementById("human-checkbox-area");
 
 const decoyButtons = document.querySelectorAll('.decoy-button');
+
+var mouseX = 0;
+var mouseY = 0;
+
+document.body.onmousemove = (event) => {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+}
 
 // winScreen.nextFunc = undefined;
 
@@ -25,8 +34,11 @@ const levels = [
     dontLevelSetup,
     sneekyLevelSetup,
     forceFieldLevelSetup,
-    decoyLevelSetup
-]
+    decoyLevelSetup,
+    itLevelSetup,
+    runAwayLevelSetup,
+    humanLevelSetup
+];
 
 var level = 0;
 
@@ -64,7 +76,7 @@ winScreen.end = function() {
     winScreen.nextButton.innerText = "Restart";
     winScreen.nextButton.onclick = init;
 
-    winScreen.heading.innerHTML = "that's it";
+    winScreen.heading.innerHTML = "that's all I have for now";
     winScreen.levelDisplay.innerHTML = levels.length;
 }
 
@@ -110,7 +122,12 @@ function cleanGameArea() {
     forceField.classList.add('hidden');
     forceFieldControls.classList.add('hidden');
 
+    hCheckboxArea.classList.add('hidden');
+
     hideDecoyButtons();
+
+    clearInterval(bouncyLevelInterval);
+    clearInterval(runAwayLevelInterval);
 }
 
 function lvl1Finish() {
@@ -213,7 +230,87 @@ function bouncyLevelSetup() {
     showGameArea();
 }
 
+var runAwayLevelInterval = undefined;
+function runAwayLevelFinish() {
+    clearInterval(runAwayLevelInterval);
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("You caught him");
+    winScreen.show();
+}
+function runAwayLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+    theButton.classList.add('absolute');
+
+    let xPosition = window.innerWidth/2 - theButton.offsetWidth/2;
+    let yPosition = window.innerHeight/2 - theButton.offsetHeight/2;
+
+    var minDist = 100;
+
+    theButton.style.top = yPosition + "px";
+    theButton.style.left = xPosition + "px";
+
+    showGameArea();
+
+    theButton.onmouseenter = () => {
+        theButton.onmouseenter = undefined;
+        runAwayLevelInterval = setInterval(() => {
+            let distX = mouseX-(xPosition + theButton.offsetWidth/2);
+            let distY = mouseY-(yPosition + theButton.offsetHeight/2);
+            let dist = Math.sqrt(distX*distX + distY*distY);
+
+            console.log(`(${distX}, ${distY}) = ${dist}`);
+
+            if(dist < minDist) {
+                let dir = distX == 0 ? 
+                        distY > 0 ?
+                            Math.PI/2 : 0-Math.PI/2 : distX > 0 ? 
+                                Math.PI + Math.atan((distY)/(distX)) : distY > 0 ? 
+                                    Math.atan((distY)/(distX)) : Math.atan((distY)/(distX));
+                let dif = minDist - dist;
+
+                let xOffset = Math.cos(dir) * dif;
+                let yOffset = Math.sin(dir) * dif;
+
+                console.log(`[${xOffset}, ${yOffset}]`);
+                console.log(dir);
+
+                let nextX = xPosition + xOffset;
+                let nextY = yPosition + yOffset;
+
+                if(nextX < 0) {
+                    nextX = 0;
+                }
+                else if(nextX > window.innerWidth - theButton.offsetWidth) {
+                    nextX = window.innerWidth - theButton.offsetWidth - 1;
+                }
+
+                if(nextY < 0) {
+                    nextY = 0;
+                }
+                else if(nextY > window.innerHeight - theButton.offsetHeight) {
+                    nextY = window.innerHeight - theButton.offsetHeight - 1;
+                }
+
+                xPosition = nextX;
+                yPosition = nextY;
+            }
+
+            theButton.style.top = yPosition + "px";
+            theButton.style.left = xPosition + "px";
+        }, 1000/60);
+    }
+    
+    
+
+    theButton.onclick = runAwayLevelFinish;
+}
+
+var sneekyLevelDone = false;
+var sneekyLevelHover = false;
 function sneekyLevelFinish() {
+    sneekyLevelDone = true;
     hideGameArea();
     winScreen.set("you found him :)");
     winScreen.show();
@@ -225,6 +322,9 @@ function sneekyLevelSetup() {
 
     theButton.classList.add('absolute');
 
+    sneekyLevelDone = false;
+    sneekyLevelHover = false;
+
     showGameArea();
 
     buttonLable.innerText = "Where did he go?";
@@ -235,13 +335,31 @@ function sneekyLevelSetup() {
 
     theButton.onmouseenter = () => {
         theButton.classList.remove('invisable');
+        sneekyLevelHover = true;
     }
     theButton.onmouseleave = () => {
         theButton.classList.add('invisable');
+        sneekyLevelHover = false;
     }
     theButton.onclick = () => {
         sneekyLevelFinish();
     }
+
+    setTimeout(function peekaboo() {
+        if(!sneekyLevelDone) {
+            if(!sneekyLevelHover) {
+                theButton.innerText = "Peekaboo!";
+                theButton.classList.remove('invisable');
+
+                setTimeout(() => {
+                    theButton.classList.add('invisable');
+                    theButton.innerText = "You found me!";
+                }, 500);
+            }
+
+            setTimeout(peekaboo, Math.floor((Math.random()*5000) + 2000));
+        }
+    }, 5000);
 }
 
 function dontLevelFinish() {
@@ -274,7 +392,7 @@ function dontLevelSetup() {
 function forceFieldLevelFinish() {
     hideGameArea();
     cleanGameArea();
-    winScreen.set("You aren't qualified to operate those controls.\n Management will be hearing about this");
+    winScreen.set("You aren't qualified to operate those controls.\n Management WILL be hearing about this");
     winScreen.show();
 }
 function forceFieldLevelSetup() {
@@ -298,6 +416,13 @@ function forceFieldLevelSetup() {
         }
     }
 
+    forceField.onclick = () => {
+        hideGameArea();
+        cleanGameArea();
+        winScreen.set("Touching a deadly force field kills you.\nWho knew?\n\n¯\\_(ツ)_/¯", false);
+        winScreen.show();
+    }
+
     showGameArea();
 }
 
@@ -312,6 +437,8 @@ function decoyLevelSetup() {
     winScreen.hide();
     cleanGameArea();
 
+    buttonLable.innerText = "Which one is right?";
+
     for(let i = 0; i < decoyButtons.length; i++) {
         decoyButtons[i].onclick = () => {
             hideGameArea();
@@ -324,6 +451,58 @@ function decoyLevelSetup() {
 
     theButton.onclick = decoyLevelFinish;
 
+    showGameArea();
+}
+
+function itLevelFinish() {
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("You aren't so easily tricked...");
+    winScreen.show();
+}
+function itLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+
+    buttonLable.innerHTML = 'click <span id="it-text">it</span>';
+
+    buttonLable.querySelector('#it-text').onclick = itLevelFinish;
+    theButton.onclick = () => {
+        hideGameArea();
+        winScreen.set("That wasn't it", false);
+        winScreen.show();
+    }
+
+    showGameArea();
+}
+
+function humanLevelFinish() {
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("You can't be too careful these days...");
+    winScreen.show();
+}
+function humanLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+
+    // buttonLable.innerText = "To click the button:";
+
+    theButton.classList.add('hidden');
+
+    hCheckboxArea.querySelector('input').checked = false;
+    hCheckboxArea.classList.remove('hidden');
+
+    hCheckboxArea.querySelector('input').onclick = () => {
+        if(hCheckboxArea.querySelector('input').checked) {
+            theButton.classList.remove('hidden');
+        }
+        else {
+            theButton.classList.add('hidden');
+        }
+    }
+
+    theButton.onclick = humanLevelFinish;
     showGameArea();
 }
 

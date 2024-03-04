@@ -24,7 +24,8 @@ winScreen.levelDisplay = document.getElementById('level-display');
 
 const forceField = document.getElementById('force-field');
 const forceFieldControls = document.getElementById('force-field-control');
-const hCheckboxArea = document.getElementById("human-checkbox-area");
+const hCheckboxArea = document.getElementById('human-checkbox-area');
+const textInputArea = document.getElementById('text-input-level-area');
 
 const decoyButtons = document.querySelectorAll('.decoy-button');
 
@@ -38,17 +39,19 @@ document.body.onmousemove = (event) => {
 
 // winScreen.nextFunc = undefined;
 
+// You can't fail a safe level but you can fail a danger level
 const levels = [
-    setUpLvl1,
-    setUpLvl2,
-    bouncyLevelSetup,
-    dontLevelSetup,
-    sneekyLevelSetup,
-    forceFieldLevelSetup,
-    decoyLevelSetup,
-    itLevelSetup,
-    runAwayLevelSetup,
-    humanLevelSetup
+    setUpLvl1, // safe
+    setUpLvl2, // danger
+    bouncyLevelSetup, // safe
+    dontLevelSetup, // danger
+    sneekyLevelSetup, // safe
+    forceFieldLevelSetup, // danger
+    decoyLevelSetup, // danger
+    itLevelSetup, // danger
+    runAwayLevelSetup, // safe
+    diyLevelSetup, // danger
+    humanLevelSetup // danger
 ];
 
 var level = 0;
@@ -134,6 +137,7 @@ function cleanGameArea() {
     forceFieldControls.classList.add('hidden');
 
     hCheckboxArea.classList.add('hidden');
+    textInputArea.classList.add('hidden');
 
     hideDecoyButtons();
 
@@ -169,7 +173,7 @@ function setUpLvl2() {
     cleanGameArea();
     lvl2IsFinished = false;
     theButton.onclick = () => {
-        theButton.innerText = "again";
+        theButton.innerText = "click again";
 
         theButton.onclick = () => {
             lvl2Finish();
@@ -499,21 +503,76 @@ function humanLevelSetup() {
 
     // buttonLable.innerText = "To click the button:";
 
-    theButton.classList.add('hidden');
+    // theButton.classList.add('hidden');
 
     hCheckboxArea.querySelector('input').checked = false;
     hCheckboxArea.classList.remove('hidden');
 
-    hCheckboxArea.querySelector('input').onclick = () => {
+    // hCheckboxArea.querySelector('input').onclick = () => {
+    //     if(hCheckboxArea.querySelector('input').checked) {
+    //         theButton.classList.remove('hidden');
+    //     }
+    //     else {
+    //         theButton.classList.add('hidden');
+    //     }
+    // }
+
+    theButton.onclick = () => {
         if(hCheckboxArea.querySelector('input').checked) {
-            theButton.classList.remove('hidden');
+            humanLevelFinish();
         }
         else {
-            theButton.classList.add('hidden');
+            hideGameArea();
+            winScreen.set("Only humans are allowed click the button", false);
+            winScreen.show();
         }
     }
+    showGameArea();
+}
 
-    theButton.onclick = humanLevelFinish;
+function diyLevelFinish() {
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("You are a professional button constructor!");
+    winScreen.show();
+}
+function diyLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+
+    buttonLable.innerText = "D.I.Y. button time!";
+
+    textInputArea.querySelector('input').value = "";
+    theButton.innerText = "";
+
+    textInputArea.classList.remove('hidden');
+    theButton.classList.add('hidden');
+
+    textInputArea.onkeyup = (event) => {
+        if(event.key == "Enter") {
+            // maybe fail???
+            return;
+        }
+        if(textInputArea.querySelector('input').value == "") {
+            theButton.classList.add('hidden');
+        }
+        else {
+            theButton.classList.remove('hidden');
+        }
+        
+        theButton.innerText = textInputArea.querySelector('input').value;
+    }
+
+    theButton.onclick = () => {
+        if(textInputArea.querySelector('input').value  == 'click') {
+            diyLevelFinish();
+        }
+        else {
+            hideGameArea();
+            winScreen.set("Your father would be disappointed of you", false);
+            winScreen.show();
+        }
+    };
     showGameArea();
 }
 

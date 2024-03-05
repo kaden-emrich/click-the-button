@@ -102,6 +102,63 @@ div#win-screen {
     overflow: show;
 }   
 
+#darkness {
+    position: fixed;
+    width: 200vw;
+    height: 200vh;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+}
+#darkness::before {
+    content: "";
+    display: block;
+    width: 0px;
+    height: 0px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+
+    border: solid 200vw rgba(0,0,0,1);
+    border-radius: 50%;
+
+    backdrop-filter: brightness(0%);
+
+    transition: width 1s, height 1s, backdrop-filter 1s 0.3s;
+}
+
+#darkness.flashlight::before {
+    content: "";
+    display: block;
+    width: 200px;
+    height: 200px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+
+    border: solid 200vw rgba(0,0,0,1);
+    border-radius: 50%;
+
+    backdrop-filter: brightness(100%);
+
+    transition: width 1s, height 1s, backdrop-filter 1s 0.3s;
+}
+
+/* #flashlight {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 100vh 100vw;
+    border-radius: 50%;
+    pointer-events: none;
+    clip-path: circle(40%);
+} */
+
 
 /* The switch - the box around the slider */
 .switch {

@@ -26,6 +26,7 @@ const forceField = document.getElementById('force-field');
 const forceFieldControls = document.getElementById('force-field-control');
 const hCheckboxArea = document.getElementById('human-checkbox-area');
 const textInputArea = document.getElementById('text-input-level-area');
+const darkness = document.getElementById("darkness");
 
 const decoyButtons = document.querySelectorAll('.decoy-button');
 
@@ -51,6 +52,7 @@ const levels = [
     itLevelSetup, // danger
     runAwayLevelSetup, // safe
     diyLevelSetup, // danger
+    darkLevelSetup, // safe
     humanLevelSetup // danger
 ];
 
@@ -138,11 +140,13 @@ function cleanGameArea() {
 
     hCheckboxArea.classList.add('hidden');
     textInputArea.classList.add('hidden');
+    darkness.classList.add('hidden');
 
     hideDecoyButtons();
 
     clearInterval(bouncyLevelInterval);
     clearInterval(runAwayLevelInterval);
+    clearInterval(darkLevelInterval);
 }
 
 function lvl1Finish() {
@@ -345,8 +349,8 @@ function sneekyLevelSetup() {
     buttonLable.innerText = "Where did he go?";
     theButton.innerText = "You found me!";
 
-    theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight) + "px";
-    theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth) + "px";
+    theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight * 2) + "px";
+    theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth * 2) + "px";
 
     theButton.onmouseenter = () => {
         theButton.classList.remove('invisable');
@@ -574,6 +578,64 @@ function diyLevelSetup() {
         }
     };
     showGameArea();
+}
+
+var darkLevelInterval = undefined;
+function darkLevelFinish() {
+    darkLevelDone = true;
+    clearInterval(darkLevelInterval);
+    hideGameArea();
+    cleanGameArea();
+    winScreen.set("That flashlight came in handy");
+    winScreen.show();
+}
+function darkLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+
+    darkLevelInterval = setInterval(updateDarkness, 1000/60);
+    darkness.classList.remove('flashlight');
+    darkness.classList.remove('hidden');
+
+    theButton.classList.add('absolute');
+
+    theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight*2) + "px";
+    theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth*2) + "px";
+
+    doBlink = false;
+    setTimeout(() => darkness.classList.add('flashlight'), 500);
+    // setTimeout(() => doBlink = true, 2000);
+
+    theButton.onclick = darkLevelFinish;
+
+    showGameArea();
+}
+var doBlink = false;
+var blinkTime = 2;
+var timeScenceBlink = 0;
+function updateDarkness() {
+    if(doBlink) {
+        if(timeScenceBlink == blinkTime) {
+            darkness.style.background = "transparent";
+            timeScenceBlink++;
+        }
+        else if(timeScenceBlink == blinkTime * 2) {
+            if(Math.random() * 100 < 1) {
+                darkness.style.background = "black";
+                timeScenceBlink = 0;
+            }
+        }
+        else if(timeScenceBlink > blinkTime * 2 && Math.random() * 1000000 < 1) {
+            darkness.style.background = "black";
+            timeScenceBlink = 0;
+        }
+        else {
+            timeScenceBlink++;
+        }
+    }
+
+    darkness.style.left = mouseX + "px";
+    darkness.style.top = mouseY + "px";
 }
 
 function init() {

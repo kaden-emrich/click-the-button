@@ -30,12 +30,20 @@ const darkness = document.getElementById("darkness");
 
 const decoyButtons = document.querySelectorAll('.decoy-button');
 
+var lastMouseX = 0;
+var lastMouseY = 0;
 var mouseX = 0;
 var mouseY = 0;
 
+var mouseMoveDist = 0;
+
 document.body.onmousemove = (event) => {
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+
     mouseX = event.clientX;
     mouseY = event.clientY;
+    mouseMoveDist = Math.sqrt(Math.pow(lastMouseX-mouseX, 2) + Math.pow(lastMouseY-mouseY, 2));
 }
 
 // winScreen.nextFunc = undefined;
@@ -55,6 +63,10 @@ const levels = [
     darkLevelSetup, // safe
     humanLevelSetup // danger
 ];
+
+// maybe make an atari breakout level?
+// quick time event?
+// guitar hero?
 
 var level = 0;
 
@@ -130,6 +142,8 @@ function cleanGameArea() {
 
     theButton.classList.remove('invisable');
     theButton.classList.remove('absolute');
+
+    theButton.style.scale = 1.00;
 
     theButton.style = "";
 
@@ -209,7 +223,7 @@ function bouncyLevelSetup() {
 
     bouncyLevelTime = 500;
 
-    let speed = 5;
+    let speed = 4;
 
     let xVelocity = speed;
     let yVelocity = 0-speed;
@@ -288,6 +302,8 @@ function runAwayLevelSetup() {
                                 Math.PI + Math.atan((distY)/(distX)) : distY > 0 ? 
                                     Math.atan((distY)/(distX)) : Math.atan((distY)/(distX));
                 let dif = minDist - dist;
+
+                dif = lerp(20, 1, dist / minDist);
 
                 let xOffset = Math.cos(dir) * dif;
                 let yOffset = Math.sin(dir) * dif;
@@ -456,7 +472,7 @@ function decoyLevelSetup() {
     winScreen.hide();
     cleanGameArea();
 
-    buttonLable.innerText = "Which one is right?";
+    buttonLable.innerText = "Which one?";
 
     for(let i = 0; i < decoyButtons.length; i++) {
         decoyButtons[i].onclick = () => {
@@ -636,6 +652,25 @@ function updateDarkness() {
 
     darkness.style.left = mouseX + "px";
     darkness.style.top = mouseY + "px";
+}
+
+function expandLevelSetup() { // i dont know what to do with this level
+    winScreen.hide();
+    cleanGameArea();
+    var expandScale = 1.00;
+    var scaleIncrement = 0.50;
+
+    theButton.onclick = () => {
+        expandScale += scaleIncrement;
+        theButton.style.scale = expandScale;
+    }
+    theButton.oncontextmenu = (event) => {
+        event.preventDefault();
+        expandScale -= scaleIncrement;
+        theButton.style.scale = expandScale;
+    }
+
+    showGameArea();
 }
 
 function init() {

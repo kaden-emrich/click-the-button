@@ -222,3 +222,11 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.super-click-button {
+    transform: scale(100%);
+    transition: transform 4s;
+}
+.super-click-button:active {
+    transform: scale(500%);
+}

@@ -107,6 +107,7 @@ div#win-screen {
     width: 200vw;
     height: 200vh;
     pointer-events: none;
+    z-index: 9;
     transform: translate(-50%, -50%);
 }
 #darkness::before {
@@ -118,7 +119,7 @@ div#win-screen {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 2;
+    z-index: 10;
     transform: translate(-50%, -50%);
 
     border: solid 200vw rgba(0,0,0,1);
@@ -126,7 +127,9 @@ div#win-screen {
 
     backdrop-filter: brightness(0%);
 
-    transition: width 1s, height 1s, backdrop-filter 1s 0.3s;
+    opacity: 0;
+
+    transition: width 1s, height 1s, backdrop-filter 1s 0.3s, opacity 2s;
 }
 
 #darkness.flashlight::before {
@@ -138,7 +141,7 @@ div#win-screen {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 2;
+    z-index: 10;
     transform: translate(-50%, -50%);
 
     border: solid 200vw rgba(0,0,0,1);
@@ -147,6 +150,11 @@ div#win-screen {
     backdrop-filter: brightness(100%);
 
     transition: width 1s, height 1s, backdrop-filter 1s 0.3s;
+}
+
+.darkness-fade::before {
+    opacity: 1 !important;
+    transition: width 1s, height 1s, backdrop-filter 1s 0.3s, opacity 2s;
 }
 
 /* #flashlight {

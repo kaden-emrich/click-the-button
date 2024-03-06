@@ -606,25 +606,38 @@ function darkLevelFinish() {
     winScreen.show();
 }
 function darkLevelSetup() {
-    winScreen.hide();
     cleanGameArea();
 
-    darkLevelInterval = setInterval(updateDarkness, 1000/60);
-    darkness.classList.remove('flashlight');
+    theButton.classList.add('hidden');
+
+    
+    darkness.classList.remove('darkness-fade');
     darkness.classList.remove('hidden');
-
-    theButton.classList.add('absolute');
-
-    theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight*2) + "px";
-    theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth*2) + "px";
-
-    doBlink = false;
-    setTimeout(() => darkness.classList.add('flashlight'), 500);
-    // setTimeout(() => doBlink = true, 2000);
-
-    theButton.onclick = darkLevelFinish;
+    darkness.classList.remove('flashlight');
 
     showGameArea();
+
+    setTimeout(() => darkness.classList.add('darkness-fade'));
+
+    setTimeout(() => {
+        winScreen.hide();
+        darkLevelInterval = setInterval(updateDarkness, 1000/60);
+
+        theButton.classList.remove('hidden');
+
+        theButton.classList.add('absolute');
+
+        theButton.style.top = Math.random() * (window.innerHeight - theButton.clientHeight*2) + "px";
+        theButton.style.left = Math.random() * (window.innerWidth - theButton.clientWidth*2) + "px";
+
+        doBlink = false;
+        setTimeout(() => darkness.classList.add('flashlight'), 500);
+        // setTimeout(() => doBlink = true, 2000);
+
+        theButton.onclick = darkLevelFinish;
+
+        
+    }, 2000);
 }
 var doBlink = false;
 var blinkTime = 2;

@@ -610,7 +610,8 @@ function darkLevelSetup() {
 
     theButton.classList.add('hidden');
 
-    
+    winScreen.nextButton.style.pointerEvents = "none";
+
     darkness.classList.remove('darkness-fade');
     darkness.classList.remove('hidden');
     darkness.classList.remove('flashlight');
@@ -620,6 +621,7 @@ function darkLevelSetup() {
     setTimeout(() => darkness.classList.add('darkness-fade'));
 
     setTimeout(() => {
+        winScreen.nextButton.style.pointerEvents = "all";
         winScreen.hide();
         darkLevelInterval = setInterval(updateDarkness, 1000/60);
 

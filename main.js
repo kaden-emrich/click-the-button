@@ -11,6 +11,8 @@ Bogdan Gura
 
 */
 
+// make a level where there are just a lot of buttons and you need to click all of them to win
+
 const theButton = document.getElementById('the-button'); // his name is Benedict
 const gameArea = document.getElementById('game');
 const buttonLable = document.getElementById('button-lable');

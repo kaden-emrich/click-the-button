@@ -157,6 +157,11 @@ div#win-screen {
     transition: width 1s, height 1s, backdrop-filter 1s 0.3s, opacity 2s;
 }
 
+#pop-text {
+    color: black;
+    cursor: pointer;
+}
+
 /* #flashlight {
     position: relative;
     width: 200px;
@@ -166,6 +171,11 @@ div#win-screen {
     pointer-events: none;
     clip-path: circle(40%);
 } */
+
+#button-lable {
+    user-select: none;
+    cursor: default;
+}
 
 
 /* The switch - the box around the slider */

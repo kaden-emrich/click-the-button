@@ -58,6 +58,7 @@ const levels = [
     dontLevelSetup, // danger
     sneekyLevelSetup, // safe
     forceFieldLevelSetup, // danger
+    popLevelSetup, // safe
     decoyLevelSetup, // danger
     itLevelSetup, // danger
     runAwayLevelSetup, // safe
@@ -639,8 +640,6 @@ function darkLevelSetup() {
         // setTimeout(() => doBlink = true, 2000);
 
         theButton.onclick = darkLevelFinish;
-
-        
     }, 2000);
 }
 var doBlink = false;
@@ -688,6 +687,91 @@ function expandLevelSetup() { // i dont know what to do with this level
     }
 
     showGameArea();
+}
+
+var popInterval;
+function popLevelFinish(popText) {
+    hideGameArea();
+    clearInterval(popInterval);
+    popInterval = undefined;
+    popText.remove();
+    winScreen.set("weeee!");
+    winScreen.show();
+}
+function popLevelSetup() {
+    winScreen.hide();
+    cleanGameArea();
+    theButton.classList.add('hidden');
+
+    theButton.classList.add('absolute');
+
+    showGameArea();
+
+    buttonLable.innerHTML = "<span id='pop-text'>click</span> the button";
+    let popText = document.getElementById('pop-text');
+    theButton.innerText = "click";
+
+    theButton.style.top = popText.offsetTop + "px";
+    theButton.style.left = popText.offsetLeft + "px";
+
+    popText.onclick = () => {
+        popText.onclick = undefined;
+        popText.classList.add('invisable');
+        theButton.style.top = popText.offsetTop + "px";
+        theButton.style.left = popText.offsetLeft + "px";
+        theButton.classList.remove('hidden');
+
+        startPopAnimation();
+    }
+    theButton.onclick = () => {
+        popLevelFinish(popText);
+    }
+}
+function startPopAnimation() {
+    let vx = 5;
+    let vy = -10;
+    let bounceFactor = 0.8;
+    let gravity = 0.5;
+
+    let grounded = false;
+
+    popInterval = setInterval(() => {
+        if(!grounded) {
+            vy += gravity;
+        }
+
+        if(theButton.offsetTop + theButton.offsetHeight > window.innerHeight) {
+            theButton.style.top = (window.innerHeight - theButton.offsetHeight) + "px";
+            vx *= bounceFactor;
+            vy *= -bounceFactor;
+            vy += gravity;
+            if(Math.abs(vy) < 2) {
+                vy = 0;
+                grounded = true;
+            }
+        }
+
+        if(theButton.offsetTop < 0) {
+            theButton.style.top = 0 + "px";
+            vx *= bounceFactor;
+            vy *= -bounceFactor;
+        }
+
+        if(theButton.offsetLeft < 0) {
+            theButton.style.left = 0 + "px";
+            vx *= -bounceFactor;
+            vy *= bounceFactor;
+        }
+
+        if(theButton.offsetLeft + theButton.offsetWidth > window.innerWidth) {
+            theButton.style.left = (window.innerWidth - theButton.offsetWidth) + "px";
+            vx *= -bounceFactor;
+            vy *= bounceFactor;
+        }
+
+        theButton.style.left = (theButton.offsetLeft + vx) + "px";
+        theButton.style.top = (theButton.offsetTop + vy) + "px";
+    }, 1000/60);
 }
 
 function init() {

@@ -78,6 +78,10 @@ div#win-screen {
     margin: 20px;
 }
 
+.unclickable {
+    pointer-events: none;
+}
+
 .hidden {
     display: none !important;
 }

@@ -321,14 +321,14 @@ function runAwayLevelSetup() {
                     nextX = 0;
                 }
                 else if(nextX > window.innerWidth - theButton.offsetWidth) {
-                    nextX = window.innerWidth - theButton.offsetWidth - 1;
+                    nextX = window.innerWidth - theButton.offsetWidth;
                 }
 
                 if(nextY < 0) {
                     nextY = 0;
                 }
                 else if(nextY > window.innerHeight - theButton.offsetHeight) {
-                    nextY = window.innerHeight - theButton.offsetHeight - 1;
+                    nextY = window.innerHeight - theButton.offsetHeight;
                 }
 
                 xPosition = nextX;
@@ -717,6 +717,7 @@ function popLevelSetup() {
     popText.onclick = () => {
         popText.onclick = undefined;
         popText.classList.add('invisable');
+        popText.classList.add('unclickable');
         theButton.style.top = popText.offsetTop + "px";
         theButton.style.left = popText.offsetLeft + "px";
         theButton.classList.remove('hidden');

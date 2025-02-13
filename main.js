@@ -151,6 +151,7 @@ function cleanGameArea() {
     theButton.style = "";
 
     buttonLable.innerHTML = '';
+    buttonLable.style.opacity = 1;
 
     forceField.classList.add('hidden');
     forceFieldControls.classList.add('hidden');
@@ -160,6 +161,8 @@ function cleanGameArea() {
     darkness.classList.add('hidden');
 
     hideDecoyButtons();
+
+    document.onclick = null;
 
     clearInterval(bouncyLevelInterval);
     clearInterval(runAwayLevelInterval);
@@ -213,6 +216,8 @@ function setUpLvl2() {
 
 var bouncyLevelInterval = undefined;
 var bouncyLevelTime = 500;
+var bouncySlow = 0.90;
+var bouncyInsultRelScale = 5;
 function bouncyLevelFinish() {
     clearInterval(bouncyLevelInterval);
     hideGameArea();
@@ -223,10 +228,12 @@ function bouncyLevelSetup() {
     winScreen.hide();
     cleanGameArea();
     theButton.classList.add('absolute');
+    buttonLable.style.opacity = 0.01;
+    buttonLable.innerText = "your aim is terrible";
 
     bouncyLevelTime = 500;
 
-    let speed = 4;
+    let speed = 4.0;
 
     let xVelocity = speed;
     let yVelocity = 0-speed;
@@ -263,11 +270,19 @@ function bouncyLevelSetup() {
 
     theButton.onclick = bouncyLevelFinish;
 
+    document.onclick = () => {
+        speed *= bouncySlow;
+        xVelocity *= bouncySlow;
+        yVelocity *= bouncySlow;
+        buttonLable.style.opacity = parseFloat(buttonLable.style.opacity) * (1+bouncyInsultRelScale*(1.0 - bouncySlow));
+    }
+
     showGameArea();
 }
 
 var runAwayLevelInterval = undefined;
 function runAwayLevelFinish() {
+    document.onclick = null;
     clearInterval(runAwayLevelInterval);
     hideGameArea();
     cleanGameArea();
